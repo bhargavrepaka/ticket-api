@@ -1,6 +1,5 @@
-import {createNewUser,getUserByEmail,comparePassword} from "../models/user/userFunctions.js"
-import { UserSchema } from "../models/user/userSchema.js";
-import {hashPassword} from "../helpers/bcryptHelper.js"
+import {createNewUser,getUserByEmail} from "../models/user/userFunctions.js"
+import {hashPassword,comparePassword} from "../helpers/bcryptHelper.js"
 import express from "express";
 const router=express.Router()
 
@@ -34,15 +33,14 @@ router.post("/login",async(req,res,next)=>{
 
     try {
         const user = await getUserByEmail(email)
-        if(!user){
-            console.log(user)
-            return next(new Error("user not found"))
-        }
+        console.log(user)
+
+        if(!user) return next(new Error("user not found"))
         const isMatchPassword= await comparePassword(password,user.password)
-        if(!isMatchPassword) { throw new Error("password didnt match")}
+        if(!isMatchPassword) throw new Error("password didnt match")
+
         res.json({isMatchPassword})
     } catch (error) {
-        console.log(error)
         return next(error)
     }
 

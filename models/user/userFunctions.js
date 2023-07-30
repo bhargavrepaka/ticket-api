@@ -12,3 +12,12 @@ export function getUserByEmail(email){
     return user
 }
 
+export function storeUserRefreshJwt(_id,token){
+    try {
+        return UserSchema.findOneAndUpdate({_id},
+            {"refreshJwt.token":token,"refreshJwt.addedAt":Date.now()},{new:true})
+    } catch (error) {
+        console.log(error)
+        return errror
+    }
+}

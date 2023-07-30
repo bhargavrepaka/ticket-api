@@ -1,6 +1,10 @@
+import express from "express";
 import {createNewUser,getUserByEmail} from "../models/user/userFunctions.js"
 import {hashPassword,comparePassword} from "../helpers/bcryptHelper.js"
-import express from "express";
+import { createAccessJwt,createRefreshJwt } from "../helpers/jwtHelper.js";
+
+
+
 const router=express.Router()
 
 router.get("/",(req,res,next)=>{
@@ -38,8 +42,11 @@ router.post("/login",async(req,res,next)=>{
         if(!user) return next(new Error("user not found"))
         const isMatchPassword= await comparePassword(password,user.password)
         if(!isMatchPassword) throw new Error("password didnt match")
+        
+        const accessJwt=await createAccessJwt(user.email,`${user._id}`)
+        const refreshJwt=await createRefreshJwt(user.email,`${user._id}`)
 
-        res.json({isMatchPassword})
+        res.json({isMatchPassword,accessJwt,refreshJwt})
     } catch (error) {
         return next(error)
     }

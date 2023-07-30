@@ -1,23 +1,42 @@
 import { UserSchema } from "./userSchema.js";
 import bcrypt, { hash } from "bcrypt"
 
-export const createNewUser=(userObj)=>{
-    const user = UserSchema.create(userObj)
-    return user
-}
-
-export function getUserByEmail(email){
-    
-    const user =  UserSchema.findOne({email})
-    return user
-}
-
-export function storeUserRefreshJwt(_id,token){
+export const createNewUser=async (userObj)=>{
     try {
-        return UserSchema.findOneAndUpdate({_id},
+        const user =await UserSchema.create(userObj)
+        return Promise.resolve(user)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+    
+}
+
+export async function getUserByEmail(email){ 
+    try {
+        const user =await UserSchema.findOne({email})
+        return Promise.resolve(user)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
+export async function storeUserRefreshJwt(_id,token){
+    try {
+        const res=await UserSchema.findOneAndUpdate({_id},
             {"refreshJwt.token":token,"refreshJwt.addedAt":Date.now()},{new:true})
+        return Promise.resolve(res)
     } catch (error) {
         console.log(error)
-        return errror
+        return Promise.reject(error)
     }
+}
+
+export async function getUserById(_id){
+    try {
+        const userData=await UserSchema.findById(_id)
+        return Promise.resolve(userData)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+   
 }

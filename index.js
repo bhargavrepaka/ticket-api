@@ -25,7 +25,7 @@ config({
 //Connect To MongoDB
 mongoose.connect(process.env.MONGO_URL,{dbName:"ticket-system"}).then((s)=>console.log("Connected to database")).catch((err)=>console.log(err)) 
 //App Routes
-app.use("/v1/users",userRoutes)
+app.use("/v1/user",userRoutes)
 app.use("/v1/tasks",taskRoutes)
 
 app.get("*",(req,res,next)=>{

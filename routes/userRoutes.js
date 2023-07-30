@@ -1,17 +1,27 @@
 import express from "express";
-import {createNewUser,getUserByEmail} from "../models/user/userFunctions.js"
+import {createNewUser,getUserByEmail, getUserById} from "../models/user/userFunctions.js"
 import {hashPassword,comparePassword} from "../helpers/bcryptHelper.js"
 import { createAccessJwt,createRefreshJwt } from "../helpers/jwtHelper.js";
-
+import { userAuthorizaton } from "../middleware/authMiddleware.js";
 
 
 const router=express.Router()
 
-router.get("/",(req,res,next)=>{
-    res.json({success:true,message:"sent from user route"})
+
+
+//userProfile v1/user/
+router.get("/",userAuthorizaton,async (req,res,next)=>{
+    const _id=req.userId
+
+    try {
+        const userProfile=await getUserById(_id)
+        res.json(userProfile)
+    } catch (error) {
+        next(error)
+    }
 })
 
-// create new user
+// create new user v1/user/
 router.post("/",async (req,res,next)=>{
     const {name,email,password}=req.body
     try {
@@ -25,7 +35,7 @@ router.post("/",async (req,res,next)=>{
      
 })
 
-// login user
+// login user v1/user/login
 router.post("/login",async(req,res,next)=>{
     const {email,password}=req.body
     console.log(email,"-",password)
@@ -52,4 +62,6 @@ router.post("/login",async(req,res,next)=>{
     }
 
 })
+
+
 export default router 

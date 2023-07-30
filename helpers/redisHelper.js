@@ -6,10 +6,22 @@ try {
     console.log(error)
 }
 
-export function setJwt(key,value){
-    return client.set(key,value)
+export async function setJwt(key,value){
+    try {
+        const res= await client.set(key,value)
+        return Promise.resolve(res)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+    
 }
 
-export function getJwt(key,){
-    return client.get(key)
+export async function getJwt(key){
+    try {
+        const res= await client.get(key)
+        if(!res) throw new Error("User Not Found in Redis")
+        return Promise.resolve(res)
+    } catch (error) {
+        return Promise.reject(error)
+    }
 }

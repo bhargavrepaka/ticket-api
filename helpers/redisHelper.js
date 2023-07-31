@@ -25,3 +25,12 @@ export async function getJwt(key){
         return Promise.reject(error)
     }
 }
+
+export async function deleteJwt(key){
+    try {
+        const res= await client.del(key)
+        return Promise.resolve(res)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}

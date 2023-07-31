@@ -4,6 +4,7 @@ import express from "express"
 import morgan from "morgan"
 import userRoutes from "./routes/userRoutes.js"
 import taskRoutes from "./routes/taskRoutes.js"
+import tokensRoute from "./routes/tokensRoute.js"
 import errorHandler from "./utils/errorHandler.js"
 import mongoose, { mongo } from "mongoose"
 import { config } from "dotenv"
@@ -27,6 +28,7 @@ mongoose.connect(process.env.MONGO_URL,{dbName:"ticket-system"}).then((s)=>conso
 //App Routes
 app.use("/v1/user",userRoutes)
 app.use("/v1/tasks",taskRoutes)
+app.use("/v1/tokens",tokensRoute)
 
 app.get("*",(req,res,next)=>{
     const error=new Error("Page Not Found")

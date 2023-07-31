@@ -1,12 +1,11 @@
 import  jwt  from "jsonwebtoken";
-import { setJwt,getJwt } from "./redisHelper.js";
+import { setJwt,getJwt, deleteJwt } from "./redisHelper.js";
 import { storeUserRefreshJwt } from "../models/user/userFunctions.js";
 
 export async function createAccessJwt(userEmail,userId){
     try {
-        const accessToken=await jwt.sign({email:userEmail},process.env.JWT_SECRET,{expiresIn:"15m"})
+        const accessToken=await jwt.sign({email:userEmail},process.env.JWT_SECRET,{expiresIn:"30m"})
         await setJwt(accessToken,userId)
-        console.log(accessToken,userId)
         return Promise.resolve(accessToken)
         
     } catch (error) {
@@ -31,6 +30,9 @@ export async function verifyAccessJwt(userJwt){
     try {
         return Promise.resolve(await jwt.verify(userJwt,process.env.JWT_SECRET))
     } catch (error) {
+        if(error.message==="jwt expired"){
+            await deleteJwt(userJwt)
+        }
         return Promise.reject(error)
     }
 }

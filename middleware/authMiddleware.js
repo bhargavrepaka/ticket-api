@@ -9,12 +9,9 @@ export async function userAuthorizaton(req,res,next){
     //verify jwt
     try {
         const decode= await verifyAccessJwt(authorization)
-        console.log("-----------------")
-        console.log(decode,"thy res")
         //check redis store
         if(decode.email){
             const userId=await getJwt(authorization)
-            console.log(userId)
             req.userId=userId
             return next()
         }

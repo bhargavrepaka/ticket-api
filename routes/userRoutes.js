@@ -1,8 +1,9 @@
 import express from "express";
-import {createNewUser,getUserByEmail, getUserById} from "../models/user/userFunctions.js"
+import {createNewUser,getUserByEmail, getUserById, storeUserRefreshJwt} from "../models/user/userFunctions.js"
 import {hashPassword,comparePassword} from "../helpers/bcryptHelper.js"
 import { createAccessJwt,createRefreshJwt } from "../helpers/jwtHelper.js";
 import { userAuthorizaton } from "../middleware/authMiddleware.js";
+import { deleteJwt } from "../helpers/redisHelper.js";
 
 
 const router=express.Router()
@@ -63,5 +64,21 @@ router.post("/login",async(req,res,next)=>{
 
 })
 
+//logout user
+router.delete("/logout",userAuthorizaton,async(req,res,next)=>{
+    const {authorization}=req.headers
+    const _id=req.userId
+    try {
+            // delet ein auth
+        await deleteJwt(authorization)
+        //delete refresh 
+        const result=await storeUserRefreshJwt(_id,"")
+        return res.json({message:'LogOut Success',result})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+    
+})
 
 export default router 

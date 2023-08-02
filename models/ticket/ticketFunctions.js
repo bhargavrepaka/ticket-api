@@ -17,3 +17,11 @@ export function getTickets(userId){
         return Promise.reject(error)
     }
 }
+export function getSingleTicket(_id,clientId){
+    try {
+        const result=TicketSchema.find({_id,clientId})
+        return Promise.resolve(result)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}

@@ -1,5 +1,5 @@
 import express from "express";
-import { createNewTicket, getTickets } from "../models/ticket/ticketFunctions.js";
+import { createNewTicket, getSingleTicket, getTickets } from "../models/ticket/ticketFunctions.js";
 import { userAuthorizaton } from "../middleware/authMiddleware.js";
 
 const router=express.Router()
@@ -26,13 +26,28 @@ router.post("/",userAuthorizaton ,async(req,res,next)=>{
     }
 })
 
-//get all tickets 
+//get all tickets  of a user
 router.get("/",userAuthorizaton,async (req,res,next)=>{
     const userId=req.userId
     try {
         const allTickets=await getTickets(userId)
         console.log(allTickets)
         return res.json(allTickets)
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+//get details of single ticket
+router.get("/:_id",userAuthorizaton,async (req,res,next)=>{
+    const userId=req.userId
+    const {_id}= req.params
+    console.log(_id)
+    try {
+        const singleTicket=await getSingleTicket(_id,userId)
+        console.log(singleTicket)
+        return res.json(singleTicket)
     } catch (error) {
         console.log(error)
         next(error)

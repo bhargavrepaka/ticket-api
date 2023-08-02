@@ -8,7 +8,7 @@ export const createNewUser=async (userObj)=>{
     } catch (error) {
         return Promise.reject(error)
     }
-    
+
 }
 
 export async function getUserByEmail(email){ 

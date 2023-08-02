@@ -4,7 +4,7 @@ import { storeUserRefreshJwt } from "../models/user/userFunctions.js";
 
 export async function createAccessJwt(userEmail,userId){
     try {
-        const accessToken=await jwt.sign({email:userEmail},process.env.JWT_SECRET,{expiresIn:"30m"})
+        const accessToken=await jwt.sign({email:userEmail},process.env.JWT_SECRET,{expiresIn:"30d"})
         await setJwt(accessToken,userId)
         return Promise.resolve(accessToken)
         

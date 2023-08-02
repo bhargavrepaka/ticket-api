@@ -3,7 +3,7 @@ import cors from "cors"
 import express from "express"
 import morgan from "morgan"
 import userRoutes from "./routes/userRoutes.js"
-import taskRoutes from "./routes/taskRoutes.js"
+import ticketRoutes from "./routes/ticketRoutes.js"
 import tokensRoute from "./routes/tokensRoute.js"
 import errorHandler from "./utils/errorHandler.js"
 import mongoose, { mongo } from "mongoose"
@@ -27,7 +27,7 @@ config({
 mongoose.connect(process.env.MONGO_URL,{dbName:"ticket-system"}).then((s)=>console.log("Connected to database")).catch((err)=>console.log(err)) 
 //App Routes
 app.use("/v1/user",userRoutes)
-app.use("/v1/tasks",taskRoutes)
+app.use("/v1/tickets",ticketRoutes)
 app.use("/v1/tokens",tokensRoute)
 
 app.get("*",(req,res,next)=>{

@@ -26,5 +26,17 @@ router.post("/",userAuthorizaton ,async(req,res,next)=>{
     }
 })
 
+//get all tickets 
+router.get("/",userAuthorizaton,async (req,res,next)=>{
+    const userId=req.userId
+    try {
+        const allTickets=await getTickets(userId)
+        console.log(allTickets)
+        return res.json(allTickets)
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
 
 export default router

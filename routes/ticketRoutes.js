@@ -1,5 +1,5 @@
 import express from "express";
-import { createNewTicket, getSingleTicket, getTickets } from "../models/ticket/ticketFunctions.js";
+import { createNewTicket, getSingleTicket, getTickets,updateTicketConversation,updateStatusClose } from "../models/ticket/ticketFunctions.js";
 import { userAuthorizaton } from "../middleware/authMiddleware.js";
 
 const router=express.Router()
@@ -53,5 +53,31 @@ router.get("/:_id",userAuthorizaton,async (req,res,next)=>{
         next(error)
     }
 })
+//sending reply to converstion
+router.put("/:_id",userAuthorizaton,async(req,res,next)=>{
+    const userId=req.userId
+    const {_id}=req.params
+    const {message,sender}=req.body
+    try {
+        const result= await updateTicketConversation(_id,userId,message,sender)
+        return res.json({success:true,message:"your message sent",result})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
 
+//updating the status of ticket
+router.patch("/close-ticket/:_id",userAuthorizaton,async(req,res,next)=>{
+    const {_id}=req.params
+    const userId=req.userId
+    try {
+        await updateStatusClose(_id,userId)
+        res.json({success:true,message:"ticket closed"})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+
+})
 export default router

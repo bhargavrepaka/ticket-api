@@ -17,7 +17,7 @@ export async function createAccessJwt(userEmail,userId){
 export async function createRefreshJwt(userEmail,userId){
     try {
         const accessToken= await jwt.sign({email:userEmail},process.env.JWT_SECRET,{expiresIn:"30d"})
-        const res= await storeUserRefreshJwt(userId,accessToken)
+        await storeUserRefreshJwt(userId,accessToken)
         return Promise.resolve(accessToken)
         
     } catch (error) {

@@ -16,7 +16,7 @@ router.get("/",userAuthorizaton,async (req,res,next)=>{
 
     try {
         const userProfile=await getUserById(_id)
-        res.json(userProfile)
+        res.json({success:true,email:userProfile.email,name:userProfile.name,_id:userProfile._id})
     } catch (error) {
         next(error)
     }
@@ -57,7 +57,7 @@ router.post("/login",async(req,res,next)=>{
         const accessJwt=await createAccessJwt(user.email,`${user._id}`)
         const refreshJwt=await createRefreshJwt(user.email,`${user._id}`)
 
-        res.json({isMatchPassword,accessJwt,refreshJwt})
+        res.json({success:true,accessJwt,refreshJwt})
     } catch (error) {
         return next(error)
     }
@@ -73,7 +73,7 @@ router.delete("/logout",userAuthorizaton,async(req,res,next)=>{
         await deleteJwt(authorization)
         //delete refresh 
         const result=await storeUserRefreshJwt(_id,"")
-        return res.json({message:'LogOut Success',result})
+        return res.json({message:'LogOut Success'})
     } catch (error) {
         console.log(error)
         next(error)

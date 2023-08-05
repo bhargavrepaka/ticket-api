@@ -6,6 +6,7 @@ import { getJwt } from "../helpers/redisHelper.js"
 export async function userAuthorizaton(req,res,next){
 
     const {authorization}=req.headers
+    console.log(authorization)
     //verify jwt
     try {
         const decode= await verifyAccessJwt(authorization)

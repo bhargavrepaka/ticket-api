@@ -58,6 +58,7 @@ router.put("/:_id",userAuthorizaton,async(req,res,next)=>{
     const userId=req.userId
     const {_id}=req.params
     const {message,sender}=req.body
+    if(!message ||!sender) next( new Error("message and sender both needed"))
     try {
         const result= await updateTicketConversation(_id,userId,message,sender)
         return res.json({success:true,message:"your message sent",result})

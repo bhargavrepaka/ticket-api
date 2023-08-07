@@ -28,6 +28,10 @@ const userSchema=mongoose.Schema({
         required:true,
         default:Date.now()
        }
+    },
+    role:{
+        type:String,
+        default:"user"
     }
 })
 

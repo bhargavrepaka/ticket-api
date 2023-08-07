@@ -24,7 +24,7 @@ router.get("/",userAuthorizaton,async (req,res,next)=>{
 
 // create new user v1/user/
 router.post("/",async (req,res,next)=>{
-    const {name,email,password}=req.body
+    const {name,email,password,role}=req.body
     try {
         const hashedPassword= await hashPassword(password)
         const result = await createNewUser({...req.body,password:hashedPassword})

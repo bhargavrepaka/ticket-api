@@ -17,9 +17,19 @@ export async function getTickets(userId){
         return Promise.reject(error)
     }
 }
+
+export async function getTicketsAdmin(userId){
+    try {
+        const result=await TicketSchema.find()
+        return Promise.resolve(result)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
 export async function getSingleTicket(_id,clientId){
     try {
-        const result=await TicketSchema.find({_id,clientId})
+        const result=await TicketSchema.find({_id})
         return Promise.resolve(result)
     } catch (error) {
         return Promise.reject(error)
@@ -29,7 +39,7 @@ export async function getSingleTicket(_id,clientId){
 export async function updateTicketConversation(_id,clientId,message,sender){
     try {
         const result =await TicketSchema.findOneAndUpdate(
-            {_id,clientId},
+            {_id},
             {status:"Pending operator reply",
             $push:{
                 conversations:{message,sender}
@@ -47,7 +57,7 @@ export async function updateTicketConversation(_id,clientId,message,sender){
 
 export async function updateStatusClose(_id,clientId){
     try {
-        const result= await TicketSchema.findOneAndUpdate({_id,clientId},{
+        const result= await TicketSchema.findOneAndUpdate({_id},{
             status:"Closed"
         },{new:true})
         console.log(result)

@@ -16,7 +16,7 @@ router.get("/",userAuthorizaton,async (req,res,next)=>{
 
     try {
         const userProfile=await getUserById(_id)
-        res.json({success:true,email:userProfile.email,name:userProfile.name,_id:userProfile._id})
+        res.json({success:true,email:userProfile.email,name:userProfile.name,_id:userProfile._id,role:userProfile.role})
     } catch (error) {
         next(error)
     }
@@ -27,7 +27,7 @@ router.post("/",async (req,res,next)=>{
     const {name,email,password,role}=req.body
     try {
         const hashedPassword= await hashPassword(password)
-        const result = await createNewUser({...req.body,password:hashedPassword})
+        const result = await createNewUser({...req.body,password:hashedPassword,role})
         console.log(result)
         res.json({success:true,message:"New User Created",result}) 
     } catch (error) {
@@ -57,7 +57,7 @@ router.post("/login",async(req,res,next)=>{
         const accessJwt=await createAccessJwt(user.email,`${user._id}`)
         const refreshJwt=await createRefreshJwt(user.email,`${user._id}`)
 
-        res.json({success:true,accessJwt,refreshJwt})
+        res.json({success:true,accessJwt,refreshJwt,role:user.role||'user'})
     } catch (error) {
         return next(error)
     }

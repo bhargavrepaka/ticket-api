@@ -1,6 +1,7 @@
 import express from "express";
-import { createNewTicket, getSingleTicket, getTickets,updateTicketConversation,updateStatusClose } from "../models/ticket/ticketFunctions.js";
+import { createNewTicket, getSingleTicket, getTickets,updateTicketConversation,updateStatusClose, getTicketsAdmin } from "../models/ticket/ticketFunctions.js";
 import { userAuthorizaton } from "../middleware/authMiddleware.js";
+import { getUserById } from "../models/user/userFunctions.js";
 
 const router=express.Router()
 
@@ -29,6 +30,18 @@ router.post("/",userAuthorizaton ,async(req,res,next)=>{
 //get all tickets  of a user
 router.get("/",userAuthorizaton,async (req,res,next)=>{
     const userId=req.userId
+    const userProfile= await getUserById(userId)
+    // console.log(userProfile)
+    if(userProfile.role==="admin"){
+        try {
+            const allTickets=await getTicketsAdmin()
+            console.log(allTickets)
+            return res.json(allTickets)
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    }
     try {
         const allTickets=await getTickets(userId)
         console.log(allTickets)

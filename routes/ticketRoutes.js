@@ -11,7 +11,7 @@ const router=express.Router()
 //new ticket
 router.post("/",userAuthorizaton ,async(req,res,next)=>{
     const {subject,message,sender}=req.body
-    const userId=req.userId
+    const userId=req.user._id
     const ticketObj={
         clientId:userId,
         subject,
@@ -29,9 +29,13 @@ router.post("/",userAuthorizaton ,async(req,res,next)=>{
 
 //get all tickets  of a user
 router.get("/",userAuthorizaton,async (req,res,next)=>{
-    const userId=req.userId
-    const userProfile= await getUserById(userId)
+    // const userId=req.userId
+    // const userProfile= await getUserById(userId)
     // console.log(userProfile)
+
+    //for firebase
+    const userProfile=req.user
+    const userId=req.user._id
     if(userProfile.role==="admin"){
         try {
             const allTickets=await getTicketsAdmin()

@@ -4,7 +4,8 @@ import {hashPassword,comparePassword} from "../helpers/bcryptHelper.js"
 import { createAccessJwt,createRefreshJwt } from "../helpers/jwtHelper.js";
 import { userAuthorizaton } from "../middleware/authMiddleware.js";
 import { deleteJwt } from "../helpers/redisHelper.js";
-
+import { createFirebaseUser, getUserByUid } from "../models/user/userFirebase.js";
+import jwt from "jsonwebtoken"
 
 const router=express.Router()
 
@@ -12,11 +13,11 @@ const router=express.Router()
 
 //userProfile v1/user/
 router.get("/",userAuthorizaton,async (req,res,next)=>{
-    const _id=req.userId
-
+    const user=req.user
     try {
-        const userProfile=await getUserById(_id)
-        res.json({success:true,email:userProfile.email,name:userProfile.name,_id:userProfile._id,role:userProfile.role})
+        const userProfile=await getUserByUid(user.uid)
+        console.log(userProfile)
+        res.json({success:true,userProfile})
     } catch (error) {
         next(error)
     }
@@ -58,6 +59,24 @@ router.post("/login",async(req,res,next)=>{
         const refreshJwt=await createRefreshJwt(user.email,`${user._id}`)
 
         res.json({success:true,accessJwt,refreshJwt,role:user.role||'user'})
+    } catch (error) {
+        return next(error)
+    }
+
+})
+
+//firebase login
+router.post("/firebaselogin",async(req,res,next)=>{
+    const {displayName,email,refreshToken,uid} =req.body
+    try {
+        let user=await getUserByUid(uid)
+        if(!user){
+            user=await createFirebaseUser({'name':displayName,email,
+                'refreshJwt.token':refreshToken,uid})
+            // console.log(user) 
+        }
+        const accessJwt=await createAccessJwt(uid,`${user._id}`)
+        return res.json({success:true,accessJwt,role:user.role||'user'})
     } catch (error) {
         return next(error)
     }

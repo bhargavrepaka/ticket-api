@@ -16,7 +16,6 @@ router.get("/",userAuthorizaton,async (req,res,next)=>{
     const user=req.user
     try {
         const userProfile=await getUserByUid(user.uid)
-        console.log(userProfile)
         res.json({success:true,userProfile})
     } catch (error) {
         next(error)

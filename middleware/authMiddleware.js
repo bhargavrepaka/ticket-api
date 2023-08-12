@@ -32,7 +32,6 @@ export async function userAuthorizaton(req,res,next){
         const user=await getUserByUid(await verifyAccessJwt(authorization))
         if(user){
             req.user=user
-            console.log("auth completed")
             return next()
         }
         else {throw new Error("Invalid authorization")}

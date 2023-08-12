@@ -1,5 +1,4 @@
 import  jwt  from "jsonwebtoken";
-import { setJwt,getJwt, deleteJwt } from "./redisHelper.js";
 import { storeUserRefreshJwt } from "../models/user/userFunctions.js";
 
 // export async function createAccessJwt(userEmail,userId){
@@ -42,9 +41,6 @@ export async function verifyAccessJwt(userJwt){
     try {
         return Promise.resolve(await jwt.verify(userJwt,process.env.JWT_SECRET))
     } catch (error) {
-        if(error.message==="jwt expired"){
-            await deleteJwt(userJwt)
-        }
         return Promise.reject(error)
     }
 }

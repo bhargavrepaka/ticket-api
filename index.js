@@ -39,7 +39,5 @@ app.use((error,req,res,next)=>{
     errorHandler(error,res)
 })
 
-app.get('/', (req, res) => res.send('zehahah!'))
-
 
 app.listen(port, () => console.log(`server running on  ${port}!`))

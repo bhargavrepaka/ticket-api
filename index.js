@@ -6,7 +6,7 @@ import userRoutes from "./routes/userRoutes.js"
 import ticketRoutes from "./routes/ticketRoutes.js"
 import tokensRoute from "./routes/tokensRoute.js"
 import errorHandler from "./utils/errorHandler.js"
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 import { config } from "dotenv"
 
 
@@ -42,4 +42,4 @@ app.use((error,req,res,next)=>{
 app.get('/', (req, res) => res.send('zehahah!'))
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`server running on  ${port}!`))
